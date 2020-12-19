@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-20144595-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-20144595-1');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>POLISphone</title>
+  <meta charset="UTF-8">
+  <meta name="description"
+    content="POLISphone app. This app let´s you create sonic maps, thus, including your own sounds and image">
+  <meta name="keywords" content="Filipe Lopes, Soundscape, Sonic Arts">
+  <meta name="author" content="Filipe Lopes">
+  <script src="p5.js"></script>
+  <script src="p5.dom.js"></script>
+  <script src="p5.sound.min.js"></script>
+
+  <!-- Fontawesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- css main -->
+  <link rel="stylesheet" type="text/css" href="extras/main.css">
+  <!-- google font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Dosis&display=swap" rel="stylesheet">
+
+  <script src="extras/jszip.min.js"></script>
+  <!-- <script src="extras/jszip-utils.min.js"></script> -->
+  <!-- <script src="extras/jszip-utils-ie.min.js"></script> -->
+  <script src="extras/FileSaver.js"></script>
+  <script src="extras/FileReader.js"></script>
+  <script src="extras/sonicSpot.js"></script>
+</head>
+
+<body>
+  <div class="rowCima">
+    <div class="columnCima" style="text-align: right;">
+      <h2><a href=".">POLISphone</a></h2>
+    </div>
+
+    <div class="columnCima" style="text-align: right; padding-bottom: 5px;">
+      <h3>
+        <i class="fa fa-upload hidden" aria-hidden="true" onclick="loadNewProject()"></i>
+        <input type="file" style="display:none" accept=".plp" id="uploadProject" onchange="loadProject()" />
+      </h3>
+    </div>
+
+    <div class="columnCima" style="text-align: center; padding-bottom: 5px">
+      <h3><i id="upload" class="fa fa-download hidden" aria-hidden="true" onclick="prepareZip()"></i></h3>
+    </div>
+
+    <div class="columnCima" style="text-align: right; padding-bottom: 5px;">
+      <h3><i id="botaoStop" class="fa fa-square hidden" aria-hidden="true"></i></h3>
+    </div>
+
+    <div class="columnCima" style="text-align: center; padding-bottom: 5px;">
+      <h3><i class="fa fa-circle hidden" aria-hidden="true" onclick="prepareRecording()"></i></h3>
+    </div>
+
+    <div class="columnCima" style="text-align: left; padding-bottom: 5px;">
+      <h3><i id="botaoPlay" class="fa fa-play hidden" aria-hidden="true"></i></h3>
+    </div>
+
+    <div class="columnCima" style="text-align: left; padding-bottom: 5px;">
+      <h3><i id="botaoDownloadTrack" class="fa fa-floppy-o hidden" aria-hidden="true"></i></h3>
+    </div>
+
+    <div class="columnCima" style="text-align: center;">
+      <img id="abreModal" class="hidden" src="extras/POLISicon.png" alt="POLISphone">
+    </div>
+
+    <div class="columnCima" style="text-align: center;">
+      <a href="https://filipelopes.net"><img src="extras/lopes.png" alt="Filipe Lopes" width="30" height="30"></a>
+    </div>
+  </div>
+
+  <!-- Processing sketch here -->
+  <div id='myContainer' class="col-12 text-center">
+    <div id="p5_loading" class="loadingclass">
+      <i class="fa fa-circle-o-notch fa-spin fa-5x"></i>
+    </div>
+  </div>
+
+  <!-- loader animation-->
+  <div class="loadAnimation hidden">
+    <div class="loader"></div>
+  </div>
+
+  <div class="menuInferior hidden">
+    <div class="row">
+      <div class="column">
+
+      </div>
+
+      <!-- market to change location of sonic spots -->
+      <div class="column">
+        <h3><i class="fa fa-map-marker" aria-hidden="true"></i></h3>
+      </div>
+
+      <div class="column">
+        <h3>1
+          <i class="fa fa-file-audio-o" aria-hidden="true" onclick="loadNewSound(0)"></i>
+          <input type="file" style="display:none" accept=" audio/*" id="inputNovoSom0" onchange="choseNewSound(0)" />
+        </h3>
+      </div>
+
+      <div class="column">
+        <h3>2
+          <i class="fa fa-file-audio-o" aria-hidden="true" onclick="loadNewSound(1)"></i>
+          <input type="file" style="display:none" accept=" audio/*" id="inputNovoSom1" onchange="choseNewSound(1)" />
+        </h3>
+      </div>
+
+      <div class="column">
+        <h3>3
+          <i class="fa fa-file-audio-o" aria-hidden="true" onclick="loadNewSound(2)"></i>
+          <input type="file" style="display:none" accept=" audio/*" id="inputNovoSom2" onchange="choseNewSound(2)" />
+        </h3>
+      </div>
+
+      <div class="column">
+        <h3>4
+          <i class="fa fa-file-audio-o" aria-hidden="true" onclick="loadNewSound(3)"></i>
+          <input type="file" style="display:none" accept=" audio/*" id="inputNovoSom3" onchange="choseNewSound(3)" />
+        </h3>
+      </div>
+
+      <div class=" column">
+        <h3>5
+          <i class="fa fa-file-audio-o" aria-hidden="true" onclick="loadNewSound(4)"></i>
+          <input type="file" style="display:none" accept=" audio/*" id="inputNovoSom4" onchange="choseNewSound(4)" />
+        </h3>
+      </div>
+
+      <div class="column">
+        <h3>6
+          <i class="fa fa-file-audio-o" aria-hidden="true" onclick="loadNewSound(5)"></i>
+          <input type="file" style="display:none" accept=" audio/*" id="inputNovoSom5" onchange="choseNewSound(5)" />
+        </h3>
+      </div>
+
+      <div class="column">
+        <h3>7
+          <i class="fa fa-file-audio-o" aria-hidden="true" onclick="loadNewSound(6)"></i>
+          <input type="file" style="display:none" accept=" audio/*" id="inputNovoSom6" onchange="choseNewSound(6)" />
+        </h3>
+      </div>
+
+      <div class="column">
+        <h3>8
+          <i class="fa fa-file-audio-o" aria-hidden="true" onclick="loadNewSound(7)"></i>
+          <input type="file" style="display:none" accept=" audio/*" id="inputNovoSom7" onchange="choseNewSound(7)" />
+        </h3>
+      </div>
+
+      <div class="column">
+        <h3> M
+          <i class="fa fa-file-image-o" aria-hidden="true" onclick="loadNewMap()"></i>
+          <input type="file" style="display:none" accept="image/*" id="inputNovoMapa"" />
+        </h3>
+      </div>
+
+      <div class=" column">
+      </div>
+    </div>
+  </div>
+
+  <!-- modal window -->
+  <div class="modal hidden">
+    <button class="close-modal">&times;</button>
+    <h4> POLISphone is a versatile sound map</h4>
+    optimized for laptop on all browsers (maybe not on IE...you know...)
+    <h2>&nbsp</h2>
+    <h4> INSTRUCTIONS</h4>
+    1. move the mouse in a circular fashion at a sound spot to listen to its sound.<br>
+    2. the larger the vinyl, the louder the sound.<br>
+    3. if a sound is playing, press the mouse once to make it loop.<br>
+    4. if a sound is looping, press the mouse once at that spot to unloop<br>
+    5. double click a sound spot to move it to a new location (after clicking the pin icon)<br>
+    <h2>&nbsp</h2>
+    <img class="centerImage" src="extras/help.png"> <br>
+    <h4>CREDITS</h4>
+    created by <a href="https://filipelopes.net">Filipe Lopes</a> | 2009-2014-2019-2020<br>
+    sounds from <a href="http://www.casadamusica.com/digitopia">Digitópia</a> at Casa da Música<br>
+    portophone illustration by <a href="https://mariamonica.com">Maria Mónica</a><br>
+    built with <a href="https://p5js.org">P5.js</a><br>
+    source code on <a href="https://github.com/Filk/POLISphone">my github</a><br>
+  </div>
+
+  <div class="overlay hidden"></div>
+
+  <script src="sketch.js"></script>
+  <script src="extras/downloadUpload.js"></script>
+  <script src="extras/recordSound.js"></script>
+</body>
+
+</html>

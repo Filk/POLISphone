@@ -1,0 +1,292 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto Mono", monospace !important;
+  background-color: #f0e4e4;
+}
+
+canvas {
+  border-width: 3px;
+  border-style: solid;
+}
+
+p {
+  font-family: "Raleway", sans-serif;
+}
+
+h1 {
+  font-size: 30px;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+/* Create equal columns, depending on the percentage (100/x) that floats next to each other */
+.columnCima {
+  float: left;
+  width: 11%;
+  padding-top: 10px;
+  margin-top: 5px;
+}
+
+/* Clear floats after the columns */
+.rowCima:after {
+  height: 100%;
+  vertical-align: middle;
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Processing canvas and element */
+#myContainer {
+  background-color: #e2d6d6;
+  margin: auto;
+  width: 100%;
+  text-align: center;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  margin-top: 1px;
+  margin-bottom: 3px;
+}
+
+/* Create columns below canvas, depending on the percentage (100/x) that floats next to each other */
+.column {
+  float: left;
+  width: 8%;
+  padding: 1px;
+  text-align: center;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+a:link,
+a:visited {
+  background-color: #f0e4e4;
+  color: #000000;
+  padding: 5px 5px;
+  text-align: center;
+  display: inline-block;
+  outline: 0;
+}
+
+a:hover,
+a:active {
+  background-color: #f0e4e4;
+  outline: 0;
+  color: #88d8b0;
+}
+
+/* map favicon */
+.fa-map-marker {
+  color: #4d4a4a;
+}
+
+.fa-map-marker:hover {
+  transition: 0.3s;
+  font-size: 30px;
+  color: #020202;
+}
+
+.changeLocation {
+  color: #a8d30d;
+  font-size: 30px;
+}
+
+.changeLocation:hover {
+  color: #a8d30d;
+  font-size: 30px;
+}
+
+#abreModal {
+  width: 25px;
+  height: 25px;
+}
+
+#abreModal:hover {
+  width: 30px;
+  height: 30px;
+}
+
+/* favicons */
+.fa-file-audio-o,
+.fa-file-image-o,
+.fa-download,
+.fa-upload {
+  color: #4d4a4a;
+}
+
+.fa-file-audio-o:hover,
+.fa-file-image-o:hover,
+.fa-download:hover,
+.fa-upload:hover {
+  transition: 0.3s;
+  font-size: 30px;
+  color: #000000;
+}
+
+/* record favicon */
+.fa-circle {
+  font-size: 20px;
+  color: #8f6767;
+  border: #00000099;
+}
+
+.fa-circle:hover {
+  transition: 0.3s;
+  font-size: 22px;
+  color: #d30909;
+  border: #00000099;
+}
+
+.aGravarSom {
+  color: #d30909;
+}
+
+/* stop favicon */
+.fa-square {
+  font-size: 20px;
+  color: #727070;
+}
+
+.fa-square:hover {
+  transition: 0.3s;
+  font-size: 22px;
+  color: #000000;
+}
+
+/* play favicon */
+.fa-play {
+  font-size: 20px;
+  color: #6d9652;
+  border: #6d9652;
+}
+
+.fa-play:hover {
+  transition: 0.3s;
+  font-size: 22px;
+  color: #9fe9af;
+  border: #03611b;
+}
+
+/* play favicon */
+.fa-floppy-o {
+  font-size: 20px;
+  color: #949692;
+}
+
+.fa-floppy-o:hover {
+  transition: 0.3s;
+  font-size: 22px;
+  color: #000000;
+}
+
+.aTocarSom {
+  color: #9fe9af;
+}
+
+.hidden {
+  display: none;
+}
+
+.modal {
+  position: absolute;
+  font-size: 14px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  background-color: rgb(225, 233, 180);
+  padding: 5rem;
+  border-radius: 5px;
+  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 3);
+  z-index: 10;
+}
+
+.close-modal {
+  position: absolute;
+  top: 1.2rem;
+  right: 2rem;
+  font-size: 5rem;
+  color: #e28f8f;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.close-modal:hover {
+  position: absolute;
+  top: 1.2rem;
+  right: 2rem;
+  font-size: 5rem;
+  color: #f03333;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 5;
+}
+
+.centerImage {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+}
+
+.loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #96ceb4;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

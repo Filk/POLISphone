@@ -1,0 +1,14 @@
+{
+	"index" : [0,1, 2,3,4,5,6,7],
+	"localizacaoX" : [620, 347,654,56,211,45,555,330],
+	"localizacaoY" : [430,127,79,112,357,557,190,481],
+	"pathFile": [
+		"extras/Batalha.mp3", 
+		"extras/Bolhao.mp3", 
+		"extras/CasaMusica.mp3", 
+		"extras/Metro.mp3",
+		"extras/parquedacidade.mp3", 
+		"extras/Ribeira.mp3", 
+		"extras/SantaCatarina.mp3", 
+		"extras/Serralves.mp3"]
+}
