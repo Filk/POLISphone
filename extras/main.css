@@ -15,7 +15,8 @@ canvas {
 }
 
 p {
-  font-family: "Raleway", sans-serif;
+  font-family: "Roboto Mono", sans-serif;
+  font-weight: bolder;
 }
 
 h1 {
@@ -33,9 +34,9 @@ h3 {
 /* Create equal columns, depending on the percentage (100/x) that floats next to each other */
 .columnCima {
   float: left;
-  width: 11%;
+  width: 4%;
   padding-top: 10px;
-  margin-top: 5px;
+  /* margin-top: 5px; */
 }
 
 /* Clear floats after the columns */
@@ -91,17 +92,6 @@ a:active {
   color: #88d8b0;
 }
 
-/* map favicon */
-.fa-map-marker {
-  color: #4d4a4a;
-}
-
-.fa-map-marker:hover {
-  transition: 0.3s;
-  font-size: 30px;
-  color: #020202;
-}
-
 .changeLocation {
   color: #a8d30d;
   font-size: 30px;
@@ -123,32 +113,56 @@ a:active {
 }
 
 /* favicons */
+.fa-question,
 .fa-file-audio-o,
 .fa-file-image-o,
 .fa-download,
 .fa-upload {
-  color: #4d4a4a;
+  color: #6b6969;
+  font-size: 27px;
 }
 
 .fa-file-audio-o:hover,
-.fa-file-image-o:hover,
+.fa-file-image-o:hover {
+  transition: 0.3s;
+  color: #000000;
+}
+
 .fa-download:hover,
 .fa-upload:hover {
   transition: 0.3s;
-  font-size: 30px;
+  font-size: 27px;
+  color: #000000;
+}
+
+/* map favicon */
+.fa-map-marker {
+  color: #4d4a4a;
+  font-size: 27px;
+}
+
+.fa-map-marker:hover {
+  transition: 0.3s;
+  color: #020202;
+  font-size: 27px;
+}
+
+.fa-question:hover {
+  transition: 0.3s;
+  font-size: 27px;
   color: #000000;
 }
 
 /* record favicon */
 .fa-circle {
-  font-size: 20px;
+  font-size: 27px;
   color: #8f6767;
   border: #00000099;
 }
 
 .fa-circle:hover {
   transition: 0.3s;
-  font-size: 22px;
+  font-size: 27px;
   color: #d30909;
   border: #00000099;
 }
@@ -159,39 +173,51 @@ a:active {
 
 /* stop favicon */
 .fa-square {
-  font-size: 20px;
+  font-size: 27px;
   color: #727070;
 }
 
 .fa-square:hover {
   transition: 0.3s;
-  font-size: 22px;
+  font-size: 27px;
   color: #000000;
 }
 
 /* play favicon */
 .fa-play {
-  font-size: 20px;
+  font-size: 27px;
   color: #6d9652;
   border: #6d9652;
 }
 
 .fa-play:hover {
   transition: 0.3s;
-  font-size: 22px;
+  font-size: 27px;
   color: #9fe9af;
   border: #03611b;
 }
 
 /* play favicon */
 .fa-floppy-o {
-  font-size: 20px;
+  font-size: 27px;
   color: #949692;
 }
 
 .fa-floppy-o:hover {
   transition: 0.3s;
-  font-size: 22px;
+  font-size: 27px;
+  color: #000000;
+}
+
+/* play favicon */
+.fa-info-circle {
+  font-size: 32px;
+  color: #393a39;
+}
+
+.fa-info-circle:hover {
+  transition: 0.3s;
+  font-size: 32px;
   color: #000000;
 }
 
@@ -201,6 +227,27 @@ a:active {
 
 .hidden {
   display: none;
+}
+
+#tip {
+  font-size: 15px;
+  font-style: italic;
+  font-weight: bolder;
+  animation: myTipAnimation 3s infinite ease-out;
+}
+
+@keyframes myTipAnimation {
+  0%,
+  100% {
+    color: rgb(255, 0, 21);
+    font-weight: bolder;
+  }
+
+  30%,
+  60% {
+    color: black;
+    font-weight: bold;
+  }
 }
 
 .modal {

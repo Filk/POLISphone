@@ -1,7 +1,78 @@
+//prepares a zip file to be loaded with content
 let zip = new JSZip();
+let dataMp3;
 let uploadProject;
 
-function prepareZip() {
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+//function to convert float32 array (-1,1) to int16Array (-32767,32767)
+function convertPeaksToPCM(peaks) {
+  let numSamples = peaks.length;
+  let pcmData = new Int16Array(numSamples);
+  for (let i = 0; i < numSamples; i++) {
+    pcmData[i] = peaks[i] * 32767; // Convert floating-point values to 16-bit integers
+  }
+  return pcmData;
+}
+
+function encodeMP3Stereo(pcmDataLeft, pcmDataRight, canais) {
+  let encoder = new lamejs.Mp3Encoder(
+    canais,
+    getAudioContext().sampleRate,
+    128
+  );
+  let mp3Data = [];
+
+  let totalSamples = pcmDataLeft.length;
+
+  sampleBlockSize = 1152;
+
+  for (let i = 0; i < totalSamples; i += sampleBlockSize) {
+    let leftChunk = pcmDataLeft.subarray(i, i + sampleBlockSize);
+    let rightChunk = pcmDataRight.subarray(i, i + sampleBlockSize);
+    let mp3buf = encoder.encodeBuffer(leftChunk, rightChunk);
+    if (mp3buf.length > 0) {
+      mp3Data.push(mp3buf);
+    }
+  }
+
+  let mp3buf = encoder.flush();
+
+  if (mp3buf.length > 0) {
+    mp3Data.push(mp3buf);
+  }
+
+  return new Blob(mp3Data, { type: "audio/mp3" }); // Convert the MP3 data to a Blob object for saving or sending
+}
+
+function encodeMP3Mono(pcmDataMono) {
+  let encoder = new lamejs.Mp3Encoder(1, getAudioContext().sampleRate, 128);
+  let mp3DataMono = [];
+
+  let totalSamples = pcmDataMono.length;
+
+  sampleBlockSize = 1152;
+
+  for (let i = 0; i < totalSamples; i += sampleBlockSize) {
+    let monoChunk = pcmDataMono.subarray(i, i + sampleBlockSize);
+    let mp3buf = encoder.encodeBuffer(monoChunk);
+    if (mp3buf.length > 0) {
+      mp3DataMono.push(mp3buf);
+    }
+  }
+
+  let mp3buf = encoder.flush();
+
+  if (mp3buf.length > 0) {
+    mp3DataMono.push(mp3buf);
+  }
+
+  return new Blob(mp3DataMono, { type: "audio/mp3" }); // Convert the MP3 data to a Blob object for saving or sending
+}
+
+async function prepareZip() {
   //loading animations
   document.querySelector("#myContainer").classList.add("hidden");
   document.querySelector(".fa-upload").classList.add("hidden");
@@ -13,6 +84,13 @@ function prepareZip() {
   document.querySelector("#abreModal").classList.add("hidden");
   document.querySelector(".fa-circle").classList.add("hidden");
   document.querySelector(".loadAnimation").classList.remove("hidden");
+
+  await sleep(1000);
+
+  //stops all sounds
+  for (let j = 0; j < 8; j++) {
+    mySounds[j].stop();
+  }
 
   //image map
   novoMapa.loadPixels();
@@ -35,10 +113,56 @@ function prepareZip() {
 
     if (arraySonicSpots[j].tenhoNovoSom) {
       //adds pathFile array in the JSON files
-      meuNewJSON.pathFile.push("som" + j + "." + "wav");
-      zip.file("som" + j + "." + "wav", mySounds[j].getBlob(), {
-        type: "blob",
-      });
+      meuNewJSON.pathFile.push("som" + j + "." + "mp3");
+
+      //for stereo files
+      let mp3DataStereo;
+      let sampleArrayLeft = [];
+      let sampleArrayRight = [];
+      //for mono files
+      let mp3DataMono;
+      let sampleArrayMono = [];
+
+      let numberChannelsThisSound = mySounds[j].channels(); //how many channels does the audio file has?
+
+      if (numberChannelsThisSound == 2) {
+        console.log("stereo");
+        let howManySamplesLong = mySounds[j].buffer.length; //how many samples in the audio file
+
+        for (let i = 0; i < howManySamplesLong; i++) {
+          const sampleValueLeft = mySounds[j].buffer.getChannelData(0)[i]; //retrive audio sample values (-1,1)
+          const sampleValueRight = mySounds[j].buffer.getChannelData(1)[i]; //retrive audio sample values (-1,1)
+          sampleArrayLeft.push(sampleValueLeft); //fills an array with sample values
+          sampleArrayRight.push(sampleValueRight); //fills an array with sample values
+        }
+
+        let pcmDataConvertedLeft = convertPeaksToPCM(sampleArrayLeft); //converts the float32 array to int16
+        let pcmDataConvertedRight = convertPeaksToPCM(sampleArrayRight); //converts the float32 array to int16
+
+        mp3DataStereo = encodeMP3Stereo(
+          //creates the stereo mp3 version
+          pcmDataConvertedLeft,
+          pcmDataConvertedRight,
+          numberChannelsThisSound
+        );
+
+        zip.file("som" + j + "." + "mp3", mp3DataStereo, { binary: true });
+        //break line forçado
+      } else if (numberChannelsThisSound == 1) {
+        console.log("mono");
+        let howManySamplesLong = mySounds[j].buffer.length; //how many samples in the audio file
+
+        for (let i = 0; i < howManySamplesLong; i++) {
+          const sampleValueMono = mySounds[j].buffer.getChannelData(0)[i]; //retrive audio sample values (-1,1)
+          sampleArrayMono.push(sampleValueMono); //fills an array with sample values
+        }
+
+        let pcmDataConvertedMono = convertPeaksToPCM(sampleArrayMono); //converts the float32 array to int16
+
+        mp3DataMono = encodeMP3Mono(pcmDataConvertedMono); //creates the mono mp3 version
+
+        zip.file("som" + j + "." + "mp3", mp3DataMono, { binary: true });
+      }
     }
   }
 
@@ -46,6 +170,7 @@ function prepareZip() {
   let meuJSONpreparar = JSON.stringify(meuNewJSON);
   //adds JSON file to the root of the zip files
   zip.file("dataPOLIS.json", meuJSONpreparar, { binary: false });
+
   startDownload();
 }
 
@@ -105,7 +230,7 @@ function newDownload() {
   fill(0);
   textSize(20);
   textAlign(CENTER, CENTER);
-  text("Download Complete!", width / 2, height / 2);
+  text("download on its way!", width / 2, height / 2);
 }
 
 //start menu to get the click needed to start the audio
@@ -139,7 +264,7 @@ function newCancel() {
   fill(0);
   textSize(20);
   textAlign(CENTER, CENTER);
-  text("You canceled!", width / 2, height / 2);
+  text("you canceled!", width / 2, height / 2);
 }
 
 //loads new sound for each specific sonic spot
@@ -150,7 +275,7 @@ function loadNewProject() {
   uploadProject.click();
 }
 
-function loadProject() {
+async function loadProject() {
   //loading animations
   document.querySelector("#myContainer").classList.add("hidden");
   document.querySelector(".fa-upload").classList.add("hidden");
@@ -162,6 +287,8 @@ function loadProject() {
   document.querySelector("#abreModal").classList.add("hidden");
   document.querySelector(".fa-circle").classList.add("hidden");
   document.querySelector(".loadAnimation").classList.remove("hidden");
+
+  await sleep(500);
 
   let reader = new FileReader();
   const file = uploadProject.files[0];
@@ -215,13 +342,13 @@ function loadProject() {
 
         //load sounds
         for (let i = 0; i < quantosSonicSpots; i++) {
-          let nomeSom = "som" + i + ".wav";
+          let nomeSom = "som" + i + ".mp3";
           if (zip.files[nomeSom]) {
             let indice = nomeSom.slice(3, 4);
             const byteArray = new Uint8Array(
               zip.files[nomeSom]._data.compressedContent
             );
-            const blob = new Blob([byteArray], { type: "audio/wav" });
+            const blob = new Blob([byteArray], { type: "audio/*" });
             let soundFile = new p5.SoundFile(blob);
             arraySonicSpots[indice].tamanhoCirculo = 0;
             arraySonicSpots[indice].localizacaoStatus = false;

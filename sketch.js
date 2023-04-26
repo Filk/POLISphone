@@ -45,10 +45,12 @@ const soundFileNames = [
   "extras/Serralves.mp3",
 ];
 
+let temporarySoundForSafari = ["0", "1", "2", "3", "4", "5", "6", "7"];
+
 //preload p5js stuff: image map and sounds
 function preload() {
   novoMapa = loadImage("extras/sonodia.jpg");
-  soundFormats("wav", "mp3", "ogg", "m4a");
+  soundFormats("mp3");
   for (let i = 0; i < quantosSonicSpots; i++) {
     mySounds.push(loadSound(soundFileNames[i]));
     mySounds[i].playMode("restart");
@@ -56,14 +58,23 @@ function preload() {
   }
 }
 
-temporarySoundForSafari = ["0", "1", "2", "3", "4", "5", "6", "7"];
-
 //p5js setup
 function setup() {
+  //ignores retina and pixels stuff
+  pixelDensity(1);
+
   // mimics the autoplay policy
   getAudioContext().suspend();
 
   const myCanvas = createCanvas(800, 600);
+
+  //puts everything 10% bellow the top margin
+  let h = Math.round(window.Height * 0.1);
+  let inn = document.getElementsByClassName("columnCima");
+  for (var i = 0; i < inn.length; i++) {
+    inn[i].style.marginTop = h + "px";
+  }
+
   // puts myCanvas on the specific html container
   myCanvas.parent("myContainer");
   // triggers this function whenever something is dropped on the canvas
@@ -174,7 +185,7 @@ function StartButton() {
   fill(136, 216, 176);
   textSize(20);
   textAlign(CENTER, CENTER);
-  text("Start", width / 2, height / 2);
+  text("start", width / 2, height / 2);
 }
 
 //after accepting polisphone to start (to activate sound)
@@ -195,7 +206,30 @@ function startSomWebsite() {
 function gotMapaFile(file) {
   if (file.type === "image") {
     background(255);
-    novoMapa = loadImage(file.data);
+
+    let tempMImagem = loadImage(file.data, (img) => {
+      tempMImagem.resize(800, 600);
+      novoMapa.loadPixels();
+      tempMImagem.loadPixels();
+      for (let y = 0; y < novoMapa.height; y++) {
+        for (let x = 0; x < novoMapa.width; x++) {
+          let index = (x + y * novoMapa.width) * 4;
+          let r = tempMImagem.pixels[index + 0];
+          let g = tempMImagem.pixels[index + 1];
+          let b = tempMImagem.pixels[index + 2];
+          let bb = tempMImagem.pixels[index + 3];
+
+          let novosPixeis = color(r, g, b);
+
+          novoMapa.pixels[index + 0] = red(novosPixeis);
+          novoMapa.pixels[index + 1] = green(novosPixeis);
+          novoMapa.pixels[index + 2] = blue(novosPixeis);
+          novoMapa.pixels[index + 3] = 255;
+        }
+      }
+      tempMImagem.updatePixels();
+      novoMapa.updatePixels();
+    });
   } else alert("This is not an image file!");
 }
 
@@ -233,16 +267,8 @@ function loadNewSound(index) {
 function choseNewSound(index) {
   //runs as soon as a sound is choosen
   let soundFile = new p5.SoundFile(inputSound.files[0]);
-  if (
-    soundFile.file.type === "audio/wav" ||
-    soundFile.file.type === "audio/x-wav" || //safari things
-    soundFile.file.type === "audio/aiff" ||
-    soundFile.file.type === "audio/x-aiff" || //safari things
-    soundFile.file.type === "audio/mpeg" ||
-    soundFile.file.type === "audio/x-mpeg" || //safari things
-    soundFile.file.type === "audio/m4a" ||
-    soundFile.file.type === "audio/x-m4a" //safari things
-  ) {
+  if (soundFile.file.type === "audio/mpeg") {
+    //safari things
     try {
       if (browser.indexOf("safari") > -1) {
         mySounds[index].pause();
@@ -265,7 +291,7 @@ function choseNewSound(index) {
       alert("Audio file too long...?");
     }
   } else {
-    alert("This is not a sound file!");
+    alert("This is not an mp3 file!");
   }
 }
 
@@ -314,7 +340,7 @@ function newSoundUserAudio() {
   fill(0);
   textSize(20);
   textAlign(CENTER, CENTER);
-  text("New Sound!", width / 2, height / 2);
+  text("new sound!", width / 2, height / 2);
 }
 
 //loads new map
@@ -381,3 +407,7 @@ overlay.addEventListener("click", function () {
   modal.classList.add("hidden");
   overlay.classList.add("hidden");
 });
+
+function displayTip(textToTip) {
+  document.getElementById("tip").innerHTML = textToTip;
+}

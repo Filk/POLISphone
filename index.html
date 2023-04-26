@@ -20,11 +20,10 @@
   <title>POLISphone</title>
   <meta charset="UTF-8">
   <meta name="description"
-    content="POLISphone app. This app let´s you create sonic maps, thus, including your own sounds and image">
+    content="POLISphone app. This app let´s you create sonic maps using your own sounds and image">
   <meta name="keywords" content="Filipe Lopes, Soundscape, Sonic Arts">
   <meta name="author" content="Filipe Lopes">
   <script src="p5.js"></script>
-  <script src="p5.dom.js"></script>
   <script src="p5.sound.min.js"></script>
 
   <!-- Fontawesome Icons -->
@@ -34,56 +33,90 @@
   <!-- google font -->
   <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Dosis&display=swap" rel="stylesheet">
-
+  <!-- plp(zip) files stuff -->
   <script src="extras/jszip.min.js"></script>
-  <!-- <script src="extras/jszip-utils.min.js"></script> -->
-  <!-- <script src="extras/jszip-utils-ie.min.js"></script> -->
   <script src="extras/FileSaver.js"></script>
   <script src="extras/FileReader.js"></script>
+  <script src="extras/jszip-utils.min.js"></script>
+  <script src="extras/lame.all.js"></script>
+
+  <!-- location object -->
   <script src="extras/sonicSpot.js"></script>
 </head>
 
 <body>
   <div class="rowCima">
-    <div class="columnCima" style="text-align: right;">
-      <h2><a href=".">POLISphone</a></h2>
-    </div>
-
-    <div class="columnCima" style="text-align: right; padding-bottom: 5px;">
+    <div class="columnCima" style="text-align: center;"></div>
+    <!-- 2 -->
+    <div class="columnCima" style="text-align: center;">
       <h3>
-        <i class="fa fa-upload hidden" aria-hidden="true" onclick="loadNewProject()"></i>
+        <i class="fa fa-upload hidden" onmouseout="displayTip(' ')" onmouseover="displayTip('upload polisphone')"
+          aria-hidden="true" onclick="loadNewProject()"></i>
         <input type="file" style="display:none" accept=".plp" id="uploadProject" onchange="loadProject()" />
       </h3>
     </div>
-
-    <div class="columnCima" style="text-align: center; padding-bottom: 5px">
-      <h3><i id="upload" class="fa fa-download hidden" aria-hidden="true" onclick="prepareZip()"></i></h3>
-    </div>
-
-    <div class="columnCima" style="text-align: right; padding-bottom: 5px;">
-      <h3><i id="botaoStop" class="fa fa-square hidden" aria-hidden="true"></i></h3>
-    </div>
-
-    <div class="columnCima" style="text-align: center; padding-bottom: 5px;">
-      <h3><i class="fa fa-circle hidden" aria-hidden="true" onclick="prepareRecording()"></i></h3>
-    </div>
-
-    <div class="columnCima" style="text-align: left; padding-bottom: 5px;">
-      <h3><i id="botaoPlay" class="fa fa-play hidden" aria-hidden="true"></i></h3>
-    </div>
-
-    <div class="columnCima" style="text-align: left; padding-bottom: 5px;">
-      <h3><i id="botaoDownloadTrack" class="fa fa-floppy-o hidden" aria-hidden="true"></i></h3>
-    </div>
-
+    <!-- 3 -->
     <div class="columnCima" style="text-align: center;">
-      <img id="abreModal" class="hidden" src="extras/POLISicon.png" alt="POLISphone">
+      <h3><i id="upload" class="fa fa-download hidden" onmouseout="displayTip(' ')"
+          onmouseover="displayTip('download polisphone')" aria-hidden="true" onclick="prepareZip()"
+          style="padding-top: 6px"></i></h3>
     </div>
-
+    <div class="columnCima" style="text-align: center;"></div>
+    <div class="columnCima" style="text-align: center;"></div>
+    <div class="columnCima" style="text-align: center;"></div>
+    <div class="columnCima" style="text-align: center;"></div>
+    <div class="columnCima" style="text-align: center;"></div>
+    <div class="columnCima" style="text-align: center;"></div>
+    <div class="columnCima" style="text-align: center;"></div>
+    <!-- 11 -->
+    <div class="columnCima" style="text-align: center; ">
+      <h3><i id="botaoStop" class="fa fa-square hidden" onmouseout="displayTip(' ')"
+          onmouseover="displayTip('stop recording')" aria-hidden="true" style="padding-top: 6px"></i></h3>
+    </div>
+    <!-- 12 -->
     <div class="columnCima" style="text-align: center;">
-      <a href="https://filipelopes.net"><img src="extras/lopes.png" alt="Filipe Lopes" width="30" height="30"></a>
+      <h3><i class="fa fa-circle hidden" onmouseout="displayTip(' ')" onmouseover="displayTip('record performance')"
+          aria-hidden="true" onclick="prepareRecording()" style="padding-top: 6px"></i>
+      </h3>
     </div>
+    <!-- 13 -->
+    <div class="columnCima" style="text-align: center;">
+      <h3><i id="botaoPlay" class="fa fa-play hidden" onmouseout="displayTip(' ')"
+          onmouseover="displayTip('play recording')" aria-hidden="true" style="padding-top: 6px"></i></h3>
+    </div>
+    <!-- 14 -->
+    <div class="columnCima" style="text-align: center;">
+      <h3><i id="botaoDownloadTrack" class="fa fa-floppy-o hidden" onmouseout="displayTip(' ')"
+          onmouseover="displayTip('download recording')" aria-hidden="true" style="padding-top: 6px;"></i>
+      </h3>
+    </div>
+    <div class="columnCima" style="text-align: center;"></div>
+    <div class="columnCima" style="text-align: center;"></div>
+    <div class="columnCima" style="text-align: left;">
+      <p id="tip"> </p>
+    </div>
+    <div class="columnCima" style="text-align: center;"></div>
+    <div class="columnCima" style="text-align: center;"></div>
+    <div class="columnCima" style="text-align: center;"></div>
+    <div class="columnCima" style="text-align: center;"></div>
+    <!-- 22 -->
+    <div class="columnCima" style="text-align: center;">
+      <i id="abreModal" class="fa fa-info-circle" onmouseout="displayTip(' ')" onmouseover="displayTip('more info')"
+        aria-hidden="true" style="padding-top: 4px"></i>
+    </div>
+    <!-- 23 -->
+    <div class="columnCima" style="text-align: center;">
+      <a href="https://filipelopes.net/polisphone"><img src="extras/POLISicon.png" alt="start" width="30" height="30"
+          onmouseout="displayTip(' ')" onmouseover="displayTip('original polisphone')"></a>
+    </div>
+    <!-- 24 -->
+    <div class="columnCima" style="text-align: center;">
+      <a href="https://filipelopes.net"><img src="extras/lopes.png" onmouseout="displayTip(' ')"
+          onmouseover="displayTip('filipelopes.net')" alt="Filipe Lopes" width="30" height="30"></a>
+    </div>
+    <div class="columnCima" style="text-align: center;"></div>
   </div>
+
 
   <!-- Processing sketch here -->
   <div id='myContainer' class="col-12 text-center">
@@ -100,73 +133,82 @@
   <div class="menuInferior hidden">
     <div class="row">
       <div class="column">
-
       </div>
 
       <!-- market to change location of sonic spots -->
       <div class="column">
-        <h3><i class="fa fa-map-marker" aria-hidden="true"></i></h3>
+        <h3><i class="fa fa-map-marker" onmouseout="displayTip(' ')" onmouseover="displayTip('display locations')"
+            aria-hidden="true"></i></h3>
       </div>
 
       <div class="column">
         <h3>1
-          <i class="fa fa-file-audio-o" aria-hidden="true" onclick="loadNewSound(0)"></i>
-          <input type="file" style="display:none" accept=" audio/*" id="inputNovoSom0" onchange="choseNewSound(0)" />
+          <i class="fa fa-file-audio-o" onmouseout="displayTip(' ')" onmouseover="displayTip('load mp3')"
+            aria-hidden="true" onclick="loadNewSound(0)"></i>
+          <input type="file" style="display:none" accept=" audio/mp3" id="inputNovoSom0" onchange="choseNewSound(0)" />
         </h3>
       </div>
 
       <div class="column">
         <h3>2
-          <i class="fa fa-file-audio-o" aria-hidden="true" onclick="loadNewSound(1)"></i>
-          <input type="file" style="display:none" accept=" audio/*" id="inputNovoSom1" onchange="choseNewSound(1)" />
+          <i class="fa fa-file-audio-o" onmouseout="displayTip(' ')" onmouseover="displayTip('load mp3')"
+            aria-hidden="true" onclick="loadNewSound(1)"></i>
+          <input type="file" style="display:none" accept=" audio/mp3" id="inputNovoSom1" onchange="choseNewSound(1)" />
         </h3>
       </div>
 
       <div class="column">
         <h3>3
-          <i class="fa fa-file-audio-o" aria-hidden="true" onclick="loadNewSound(2)"></i>
-          <input type="file" style="display:none" accept=" audio/*" id="inputNovoSom2" onchange="choseNewSound(2)" />
+          <i class="fa fa-file-audio-o" onmouseout="displayTip(' ')" onmouseover="displayTip('load mp3')"
+            aria-hidden="true" onclick="loadNewSound(2)"></i>
+          <input type="file" style="display:none" accept=" audio/mp3" id="inputNovoSom2" onchange="choseNewSound(2)" />
         </h3>
       </div>
 
       <div class="column">
         <h3>4
-          <i class="fa fa-file-audio-o" aria-hidden="true" onclick="loadNewSound(3)"></i>
-          <input type="file" style="display:none" accept=" audio/*" id="inputNovoSom3" onchange="choseNewSound(3)" />
+          <i class="fa fa-file-audio-o" onmouseout="displayTip(' ')" onmouseover="displayTip('load mp3')"
+            aria-hidden="true" onclick="loadNewSound(3)"></i>
+          <input type="file" style="display:none" accept=" audio/mp3" id="inputNovoSom3" onchange="choseNewSound(3)" />
         </h3>
       </div>
 
       <div class=" column">
         <h3>5
-          <i class="fa fa-file-audio-o" aria-hidden="true" onclick="loadNewSound(4)"></i>
-          <input type="file" style="display:none" accept=" audio/*" id="inputNovoSom4" onchange="choseNewSound(4)" />
+          <i class="fa fa-file-audio-o" onmouseout="displayTip(' ')" onmouseover="displayTip('load mp3')"
+            aria-hidden="true" onclick="loadNewSound(4)"></i>
+          <input type="file" style="display:none" accept=" audio/mp3" id="inputNovoSom4" onchange="choseNewSound(4)" />
         </h3>
       </div>
 
       <div class="column">
         <h3>6
-          <i class="fa fa-file-audio-o" aria-hidden="true" onclick="loadNewSound(5)"></i>
-          <input type="file" style="display:none" accept=" audio/*" id="inputNovoSom5" onchange="choseNewSound(5)" />
+          <i class="fa fa-file-audio-o" onmouseout="displayTip(' ')" onmouseover="displayTip('load mp3')"
+            aria-hidden="true" onclick="loadNewSound(5)"></i>
+          <input type="file" style="display:none" accept=" audio/mp3" id="inputNovoSom5" onchange="choseNewSound(5)" />
         </h3>
       </div>
 
       <div class="column">
         <h3>7
-          <i class="fa fa-file-audio-o" aria-hidden="true" onclick="loadNewSound(6)"></i>
-          <input type="file" style="display:none" accept=" audio/*" id="inputNovoSom6" onchange="choseNewSound(6)" />
+          <i class="fa fa-file-audio-o" onmouseout="displayTip(' ')" onmouseover="displayTip('load mp3')"
+            aria-hidden="true" onclick="loadNewSound(6)"></i>
+          <input type="file" style="display:none" accept=" audio/mp3" id="inputNovoSom6" onchange="choseNewSound(6)" />
         </h3>
       </div>
 
       <div class="column">
         <h3>8
-          <i class="fa fa-file-audio-o" aria-hidden="true" onclick="loadNewSound(7)"></i>
-          <input type="file" style="display:none" accept=" audio/*" id="inputNovoSom7" onchange="choseNewSound(7)" />
+          <i class="fa fa-file-audio-o" onmouseout="displayTip(' ')" onmouseover="displayTip('load mp3')"
+            aria-hidden="true" onclick="loadNewSound(7)"></i>
+          <input type="file" style="display:none" accept=" audio/mp3" id="inputNovoSom7" onchange="choseNewSound(7)" />
         </h3>
       </div>
 
       <div class="column">
-        <h3> M
-          <i class="fa fa-file-image-o" aria-hidden="true" onclick="loadNewMap()"></i>
+        <h3> MAP
+          <i class="fa fa-file-image-o" onmouseout="displayTip(' ')" onmouseover="displayTip('load image')"
+            aria-hidden="true" onclick="loadNewMap()"></i>
           <input type="file" style="display:none" accept="image/*" id="inputNovoMapa"" />
         </h3>
       </div>
@@ -178,7 +220,7 @@
 
   <!-- modal window -->
   <div class="modal hidden">
-    <button class="close-modal">&times;</button>
+    <button class="close-modal" style="padding-top:20px">&times;</button>
     <h4> POLISphone is a versatile sound map</h4>
     optimized for laptop on all browsers (maybe not on IE...you know...)
     <h2>&nbsp</h2>
@@ -202,7 +244,8 @@
 
   <script src="sketch.js"></script>
   <script src="extras/downloadUpload.js"></script>
-  <script src="extras/recordSound.js"></script>
+  <script src="extras/recordSound.js"></script>    
+    
 </body>
 
 </html>
